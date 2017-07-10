@@ -31,7 +31,7 @@ install:
   - make bootstrap
 
 script:
-  - if [ "$CROSSDOCK" != "1" ]; then make test_ci ; fi
+  - if [ "$CROSSDOCK" != "1" ]; then make test-ci ; fi
   - if [ "$COVER" = "1" ]; then coveralls -v ; fi
   - if [ "$CROSSDOCK" = "1" ]; then make crossdock ; fi
 

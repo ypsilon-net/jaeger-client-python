@@ -21,12 +21,13 @@
 import socket
 import struct
 
-import jaeger_client.thrift_gen.zipkincore.ZipkinCollector as zipkin_collector
 import jaeger_client.thrift_gen.sampling.SamplingManager as sampling_manager
-from .thrift_gen.zipkincore.constants import SERVER_SEND, SERVER_RECV
-from .thrift_gen.zipkincore.constants import CLIENT_SEND, CLIENT_RECV
-from .thrift_gen.zipkincore.constants import SERVER_ADDR, CLIENT_ADDR
-from .thrift_gen.zipkincore.constants import LOCAL_COMPONENT
+import jaeger_client.thrift_gen.zipkincore.ZipkinCollector as zipkin_collector
+
+from .thrift_gen.zipkincore.constants import (CLIENT_ADDR, CLIENT_RECV,
+                                              CLIENT_SEND, LOCAL_COMPONENT,
+                                              SERVER_ADDR, SERVER_RECV,
+                                              SERVER_SEND)
 
 _max_signed_port = (1 << 15) - 1
 _max_unsigned_port = (1 << 16)

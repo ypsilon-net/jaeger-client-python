@@ -19,8 +19,11 @@
 # THE SOFTWARE.
 
 from __future__ import absolute_import
+
 import unittest
-from jaeger_client import Config, ConstSampler, ProbabilisticSampler, RateLimitingSampler
+
+from jaeger_client import (Config, ConstSampler, ProbabilisticSampler,
+                           RateLimitingSampler)
 
 
 class ConfigTests(unittest.TestCase):

@@ -18,18 +18,18 @@
 # OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 # THE SOFTWARE.
 
-import mock
 import random
 
+import mock
 import pytest
 import tornado.httputil
-
 from opentracing import Format, child_of
 from opentracing.ext import tags as ext_tags
-from jaeger_client import ConstSampler, Tracer
+
 from jaeger_client import constants as c
-from jaeger_client.thrift_gen.zipkincore import constants as g
+from jaeger_client import ConstSampler, Tracer
 from jaeger_client.thrift import add_zipkin_annotations
+from jaeger_client.thrift_gen.zipkincore import constants as g
 
 
 def log_exists(span, value):

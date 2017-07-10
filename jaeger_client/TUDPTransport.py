@@ -19,10 +19,11 @@
 # THE SOFTWARE.
 
 from __future__ import absolute_import
+
 import logging
+import socket
 
 from thrift.transport.TTransport import TTransportBase
-import socket
 
 logger = logging.getLogger('jaeger_tracing')
 

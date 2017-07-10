@@ -1,8 +1,11 @@
 import json
 import logging
 
-from crossdock.thrift_gen.tracetest.ttypes import JoinTraceRequest, StartTraceRequest, \
-    Downstream, Transport, TraceResponse, ObservedSpan
+from crossdock.thrift_gen.tracetest.ttypes import (Downstream,
+                                                   JoinTraceRequest,
+                                                   ObservedSpan,
+                                                   StartTraceRequest,
+                                                   TraceResponse, Transport)
 
 
 #

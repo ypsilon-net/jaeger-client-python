@@ -30,8 +30,8 @@ bootstrap:
 test: clean
 	$(pytest) $(test_args) --benchmark-skip
 
-.PHONY: test_ci
-test_ci: clean test lint
+.PHONY: test-ci
+test-ci: clean test lint
 
 .PHONY: test-perf
 test-perf: clean
@@ -58,6 +58,11 @@ clean:
 .PHONY: lint
 lint:
 	$(flake8) $(projects) tests
+	isort $(sources) -c -vb
+
+.PHONY: fmt
+fmt:
+	isort $(sources)
 
 .PHONY: shell
 shell:

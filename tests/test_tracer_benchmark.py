@@ -19,10 +19,12 @@
 # THE SOFTWARE.
 
 import time
+
 from opentracing import Tracer as NoopTracer
-from jaeger_client.tracer import Tracer
+
 from jaeger_client.reporter import NullReporter
 from jaeger_client.sampler import ConstSampler
+from jaeger_client.tracer import Tracer
 
 
 def _generate_spans(tracer, iterations=1000, sleep=None):

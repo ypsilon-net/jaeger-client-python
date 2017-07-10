@@ -22,15 +22,10 @@ from __future__ import absolute_import
 
 import urllib
 
-from opentracing import (
-    InvalidCarrierException,
-    SpanContextCorruptedException,
-)
-from .constants import (
-    TRACE_ID_HEADER,
-    BAGGAGE_HEADER_PREFIX,
-    DEBUG_ID_HEADER_KEY,
-)
+from opentracing import InvalidCarrierException, SpanContextCorruptedException
+
+from .constants import (BAGGAGE_HEADER_PREFIX, DEBUG_ID_HEADER_KEY,
+                        TRACE_ID_HEADER)
 from .span_context import SpanContext
 
 

@@ -20,14 +20,15 @@
 
 from cStringIO import StringIO
 
-import jaeger_client.thrift_gen.zipkincore.ZipkinCollector as zipkin_collector
-import jaeger_client.thrift_gen.sampling.SamplingManager as sampling_manager
 from opentracing import child_of
-from jaeger_client import ProbabilisticSampler, RateLimitingSampler
-from jaeger_client import thrift, Span, SpanContext
-from jaeger_client.thrift_gen.agent import Agent as Agent
 from thrift.protocol.TCompactProtocol import TCompactProtocol
 from thrift.transport.TTransport import TMemoryBuffer
+
+import jaeger_client.thrift_gen.sampling.SamplingManager as sampling_manager
+import jaeger_client.thrift_gen.zipkincore.ZipkinCollector as zipkin_collector
+from jaeger_client import (ProbabilisticSampler, RateLimitingSampler, Span,
+                           SpanContext, thrift)
+from jaeger_client.thrift_gen.agent import Agent as Agent
 
 
 def test_ipv4_to_int():

@@ -18,23 +18,18 @@
 # OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 # THE SOFTWARE.
 
-import time
 import math
+import time
+
 import mock
 import pytest
 
-from jaeger_client.sampler import (
-    Sampler,
-    ConstSampler,
-    ProbabilisticSampler,
-    RateLimitingSampler,
-    RemoteControlledSampler,
-    GuaranteedThroughputProbabilisticSampler,
-    AdaptiveSampler,
-    DEFAULT_SAMPLING_PROBABILITY,
-    get_sampling_probability,
-    get_rate_limit,
-)
+from jaeger_client.sampler import (DEFAULT_SAMPLING_PROBABILITY,
+                                   AdaptiveSampler, ConstSampler,
+                                   GuaranteedThroughputProbabilisticSampler,
+                                   ProbabilisticSampler, RateLimitingSampler,
+                                   RemoteControlledSampler, Sampler,
+                                   get_rate_limit, get_sampling_probability)
 
 MAX_INT = 1L << 63
 

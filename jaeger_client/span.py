@@ -26,6 +26,7 @@ import time
 
 import opentracing
 from opentracing.ext import tags as ext_tags
+
 from . import codecs, thrift
 
 SAMPLED_FLAG = 0x01

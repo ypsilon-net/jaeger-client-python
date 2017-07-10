@@ -25,19 +25,16 @@ from collections import namedtuple
 
 import mock
 import pytest
-from jaeger_client import Span, SpanContext, Tracer, ConstSampler
-from jaeger_client.codecs import (
-    Codec, TextCodec, BinaryCodec, ZipkinCodec, ZipkinSpanFormat,
-    span_context_from_string,
-    span_context_to_string,
-)
+from opentracing import Format
+from opentracing.propagation import (InvalidCarrierException,
+                                     SpanContextCorruptedException)
+
+from jaeger_client import ConstSampler, Span, SpanContext, Tracer
+from jaeger_client.codecs import (BinaryCodec, Codec, TextCodec, ZipkinCodec,
+                                  ZipkinSpanFormat, span_context_from_string,
+                                  span_context_to_string)
 from jaeger_client.config import Config
 from jaeger_client.reporter import InMemoryReporter
-from opentracing import Format
-from opentracing.propagation import (
-    InvalidCarrierException,
-    SpanContextCorruptedException,
-)
 
 
 class TestCodecs(unittest.TestCase):

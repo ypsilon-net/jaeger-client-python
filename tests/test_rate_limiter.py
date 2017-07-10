@@ -19,9 +19,11 @@
 # THE SOFTWARE.
 
 import time
+
 import mock
 
 from jaeger_client.rate_limiter import RateLimiter
+
 
 def test_rate_limiting_sampler():
     rate_limiter = RateLimiter(2, 2)

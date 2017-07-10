@@ -24,31 +24,18 @@ import logging
 import threading
 
 import opentracing
+
 from . import Tracer
+from .constants import (BAGGAGE_HEADER_PREFIX, DEBUG_ID_HEADER_KEY,
+                        DEFAULT_FLUSH_INTERVAL, DEFAULT_SAMPLING_INTERVAL,
+                        SAMPLER_TYPE_CONST, SAMPLER_TYPE_PROBABILISTIC,
+                        SAMPLER_TYPE_RATE_LIMITING, TRACE_ID_HEADER)
 from .local_agent_net import LocalAgentSender
-from .reporter import (
-    Reporter,
-    CompositeReporter,
-    LoggingReporter,
-)
-from .sampler import (
-    ConstSampler,
-    ProbabilisticSampler,
-    RateLimitingSampler,
-    RemoteControlledSampler,
-)
-from .constants import (
-    DEFAULT_SAMPLING_INTERVAL,
-    DEFAULT_FLUSH_INTERVAL,
-    SAMPLER_TYPE_CONST,
-    SAMPLER_TYPE_PROBABILISTIC,
-    SAMPLER_TYPE_RATE_LIMITING,
-    TRACE_ID_HEADER,
-    BAGGAGE_HEADER_PREFIX,
-    DEBUG_ID_HEADER_KEY,
-)
-from .metrics import LegacyMetricsFactory, MetricsFactory, Metrics
-from .utils import get_boolean, ErrorReporter
+from .metrics import LegacyMetricsFactory, Metrics, MetricsFactory
+from .reporter import CompositeReporter, LoggingReporter, Reporter
+from .sampler import (ConstSampler, ProbabilisticSampler, RateLimitingSampler,
+                      RemoteControlledSampler)
+from .utils import ErrorReporter, get_boolean
 
 DEFAULT_REPORTING_HOST = 'localhost'
 DEFAULT_REPORTING_PORT = 5775

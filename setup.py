@@ -61,6 +61,7 @@ setup(
             'coveralls',
             'tchannel>=0.27',
             'opentracing_instrumentation>=2,<3',
+            'isort<4.3'
         ]
     },
 )

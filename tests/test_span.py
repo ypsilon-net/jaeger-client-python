@@ -24,7 +24,8 @@ import collections
 import json
 
 from opentracing.ext import tags as ext_tags
-from jaeger_client import Span, SpanContext, ConstSampler
+
+from jaeger_client import ConstSampler, Span, SpanContext
 from jaeger_client.thrift import add_zipkin_annotations
 
 

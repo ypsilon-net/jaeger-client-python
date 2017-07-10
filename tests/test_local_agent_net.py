@@ -1,8 +1,11 @@
+from urlparse import urlparse
+
 import pytest
 import tornado.web
-from urlparse import urlparse
-from jaeger_client.local_agent_net import LocalAgentSender
+
 from jaeger_client.config import DEFAULT_REPORTING_PORT
+from jaeger_client.local_agent_net import LocalAgentSender
+
 
 test_strategy = """
     {

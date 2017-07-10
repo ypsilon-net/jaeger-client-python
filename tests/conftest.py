@@ -20,6 +20,7 @@
 
 import mock
 import pytest
+
 from jaeger_client import ConstSampler, Tracer
 
 

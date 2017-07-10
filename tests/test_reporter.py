@@ -17,23 +17,23 @@
 # LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
 # OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 # THE SOFTWARE.
+import collections
 import logging
 import time
-import collections
+from concurrent.futures import Future
 
 import mock
 import pytest
 import tornado.gen
-import jaeger_client.reporter
-
-from concurrent.futures import Future
-from jaeger_client import Span, SpanContext
-from jaeger_client.metrics import LegacyMetricsFactory, Metrics
-from jaeger_client.utils import ErrorReporter
 from tornado.ioloop import IOLoop
 from tornado.testing import AsyncTestCase, gen_test
-from jaeger_client.reporter import Reporter
+
+import jaeger_client.reporter
+from jaeger_client import Span, SpanContext
 from jaeger_client.ioloop_util import future_result
+from jaeger_client.metrics import LegacyMetricsFactory, Metrics
+from jaeger_client.reporter import Reporter
+from jaeger_client.utils import ErrorReporter
 
 
 def test_null_reporter():
