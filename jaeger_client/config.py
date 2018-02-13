@@ -271,7 +271,8 @@ class Config(object):
         with Config._initialized_lock:
             if Config._initialized:
                 logger.warn('Jaeger tracer already initialized, skipping')
-                return
+                return Config._initialized.get_tracer(
+                    self.service_name, self.tags)
             Config._initialized = True
 
         channel = self._create_local_agent_channel(io_loop=io_loop)
@@ -303,7 +304,7 @@ class Config(object):
             reporter=reporter,
             sampler=sampler,
         )
-
+        Config._initialized = tracer
         self._initialize_global_tracer(tracer=tracer)
         return tracer
 

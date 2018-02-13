@@ -121,11 +121,11 @@ class Reporter(NullReporter):
             self.io_loop.spawn_callback(self._consume_queue)
 
         self._process_lock = Lock()
-        self._process = None
+        self._process = {}
 
     def set_process(self, service_name, tags, max_length):
         with self._process_lock:
-            self._process = thrift.make_process(
+            self._process[service_name] = thrift.make_process(
                 service_name=service_name, tags=tags, max_length=max_length,
             )
 
@@ -150,14 +150,19 @@ class Reporter(NullReporter):
 
     @tornado.gen.coroutine
     def _consume_queue(self):
-        spans = []
+        spans = {}
+
+        def hasSpans():
+            return spans and max([len(i) for i in spans.values()]) > 0
+
         stopped = False
         while not stopped:
-            while len(spans) < self.batch_size:
+            services = []  # at least one run
+            while not services:
                 try:
                     # using timeout allows periodic flush with smaller packet
                     timeout = self.flush_interval + self.io_loop.time() \
-                        if self.flush_interval and spans else None
+                        if self.flush_interval and hasSpans() else None
                     span = yield self.queue.get(timeout=timeout)
                 except tornado.gen.TimeoutError:
                     break
@@ -168,12 +173,22 @@ class Reporter(NullReporter):
                         # don't return yet, submit accumulated spans first
                         break
                     else:
-                        spans.append(span)
-            if spans:
-                yield self._submit(spans)
-                for _ in spans:
-                    self.queue.task_done()
-                spans = spans[:0]
+                        service_name = span.service_name
+                        if service_name not in spans:
+                            spans[service_name] = []
+                        spans[service_name].append(span)
+                # has at leas one reached batch size?
+                services = [k for k, v in spans.items() if len(v) >= self.batch_size]
+
+            if hasSpans:
+                # at least one has reacht .. but send all who have something
+                # otherwise on stop not all is send .. maybe neet to improve it later
+                for service_name, span in spans.items():
+                    if span:
+                        yield self._submit(span, service_name)
+                        for _ in span:
+                            self.queue.task_done()
+                        span = span[:0]
         self.logger.info('Span publisher exists')
 
     # method for protocol factory
@@ -186,11 +201,11 @@ class Reporter(NullReporter):
         return TCompactProtocol.TCompactProtocol(transport)
 
     @tornado.gen.coroutine
-    def _submit(self, spans):
+    def _submit(self, spans, service_name):
         if not spans:
             return
         with self._process_lock:
-            process = self._process
+            process = self._process[service_name]
             if not process:
                 return
         try:

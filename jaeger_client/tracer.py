@@ -25,6 +25,7 @@ import six
 import opentracing
 from opentracing import Format, UnsupportedFormatException
 from opentracing.ext import tags as ext_tags
+from copy import copy
 
 from . import constants
 from .codecs import TextCodec, ZipkinCodec, ZipkinSpanFormat, BinaryCodec
@@ -35,6 +36,7 @@ from .metrics import Metrics, LegacyMetricsFactory
 from .utils import local_ip
 
 logger = logging.getLogger('jaeger_tracing')
+
 
 
 class Tracer(opentracing.Tracer):
@@ -95,6 +97,12 @@ class Tracer(opentracing.Tracer):
             service_name=self.service_name,
             tags=self.tags,
             max_length=self.max_tag_value_length,
+        )
+
+    def get_tracer(self, service_name, tags=None):
+        return TracerAdapter(
+            self, service_name,
+            tags or copy(self.tags)
         )
 
     def start_span(self,
@@ -172,7 +180,7 @@ class Tracer(opentracing.Tracer):
                     tags=tags, start_time=start_time)
 
         self._emit_span_metrics(span=span, join=rpc_server)
-
+        span.service_name = self.service_name
         return span
 
     def inject(self, span_context, format, carrier):
@@ -227,6 +235,34 @@ class Tracer(opentracing.Tracer):
 
     def random_id(self):
         return self.random.getrandbits(constants.MAX_ID_BITS)
+
+class TracerAdapter(Tracer):
+    def __init__(
+        self, tracer, service_name, tags=None,
+        max_tag_value_length=None
+    ):
+        self._tracer = tracer
+        self.service_name = service_name
+        self.tags = tags
+        self.max_tag_value_length = max_tag_value_length
+
+        self._tracer.reporter.set_process(
+            self.service_name, self.tags,
+            self.max_tag_value_length
+        )
+
+
+    def start_span(self, *args, **kwargs):
+        span = self._tracer.start_span(*args, **kwargs)
+        span.service_name = self.service_name
+        span._tracer = self
+        return span
+
+    def __getattr__(self, key):
+        parent = getattr(self._tracer, key, None)
+        if parent:
+            return parent
+        raise AttributeError('no method %s in TracerAdpater' % (key, ))
 
 
 class TracerMetrics(object):
