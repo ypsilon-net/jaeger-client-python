@@ -159,6 +159,10 @@ class Reporter(NullReporter):
         while not stopped:
             services = []  # at least one run
             while not services:
+                # self.logger.debug('_consume_queue services(%s): %s  %s max: %s' % (
+                #     self.batch_size, self.batch_size, hasSpans(),
+                #     spans and max([len(i) for i in spans.values()])
+                # ))
                 try:
                     # using timeout allows periodic flush with smaller packet
                     timeout = self.flush_interval + self.io_loop.time() \
@@ -177,18 +181,25 @@ class Reporter(NullReporter):
                         if service_name not in spans:
                             spans[service_name] = []
                         spans[service_name].append(span)
-                # has at leas one reached batch size?
+
+                # has at least one reached batch size?
                 services = [k for k, v in spans.items() if len(v) >= self.batch_size]
 
-            if hasSpans:
-                # at least one has reacht .. but send all who have something
-                # otherwise on stop not all is send .. maybe neet to improve it later
-                for service_name, span in spans.items():
-                    if span:
-                        yield self._submit(span, service_name)
-                        for _ in span:
-                            self.queue.task_done()
-                        span = span[:0]
+            # self.logger.debug("_consume_queue services: %s stopped: %s" % (services, stopped))
+            if not services:
+                # this only happens on stop .. and than we better should send all
+                services = spans.keys()
+
+
+            # self.logger.debug('_consume_queue spans: %s' % (spans))
+            for service_name in services:
+                span = spans[service_name]
+                self.logger.debug('_consume_queue submit: %s  %s' % (service_name, span))
+                if span:
+                    yield self._submit(span, service_name)
+                    for _ in span:
+                        self.queue.task_done()
+                    spans[service_name] = spans[service_name][:0]
         self.logger.info('Span publisher exists')
 
     # method for protocol factory
